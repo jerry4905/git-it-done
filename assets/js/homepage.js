@@ -9,21 +9,21 @@ var getUserRepos = function (user) {
 
     // make a request to the url 
     fetch(apiUrl)
-    .then(function(response) {
-        // request was succesful
-        if (response.ok) {
-            response.json().then(function(data) {
-                displayRepos(data, user);
-            });
-        } else {
-            alert('Error: Github User Not Found');
-        }
-    })
-    .catch(function(error) {
-        // Notice this `.catch()` getting chained onto the end of the `.then()` method
-        alert("Unable to connect to GitHub");
-});
-}
+        .then(function (response) {
+            // request was succesful
+            if (response.ok) {
+                response.json().then(function (data) {
+                    displayRepos(data, user);
+                });
+            } else {
+                alert('Error: ' + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            // Notice this `.catch()` getting chained onto the end of the `.then()` method
+            alert("Unable to connect to GitHub");
+        });
+};
 
 var formSubmitHandler = function (event) {
     event.preventDefault();
@@ -32,11 +32,13 @@ var formSubmitHandler = function (event) {
 
     if (username) {
         getUserRepos(username);
+
+        repoContainerEl.textContent = '';
+
         nameInputEl.value = "";
     } else {
         alert("Please enter a GItHub uesername");
     }
-    console.log(event);
 };
 var displayRepos = function (repos, searchTerm) {
     // check if api returned any repos
@@ -44,7 +46,7 @@ var displayRepos = function (repos, searchTerm) {
         repoContainerEl.textContent = "No repositories found.";
         return;
     }
-    repoContainerEl.textContent = "";
+
     repoSearchTerm.textContent = searchTerm;
     // loop over repos
     for (var i = 0; i < repos.length; i++) {
@@ -81,5 +83,5 @@ var displayRepos = function (repos, searchTerm) {
         repoContainerEl.appendChild(repoEl);
     }
 };
-
+// add event listeners to forms
 userFormEl.addEventListener("submit", formSubmitHandler);
